@@ -5,6 +5,8 @@ var EmitterManager = require('emitter-manager');
 var inherit = require('inherit');
 var reactive = require('reactive');
 
+module.exports = View;
+
 /**
  * Opinionated View. Somewhat like Backbone, but using reactive
  * templates instead.
