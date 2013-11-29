@@ -17,7 +17,7 @@ function View(el){
   if (!(this instanceof View)) return inherit(el, View);
   this.el = $(el);
   this._bound = {};
-  this.events = events(this.el.get(), this);
+  this.events = events(this.el.get(0), this);
 }
 
 Emitter(View.prototype);
@@ -28,7 +28,7 @@ View.prototype.remove = function(){
 };
 
 View.prototype.react = function(model){
-  this.reactive = reactive(this.el.get(), model || this, this);
+  this.reactive = reactive(this.el.get(0), model || this, this);
 };
 
 View.prototype.find = function(sel){
