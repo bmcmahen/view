@@ -1,4 +1,4 @@
-var dom = require('dom');
+var $ = require('jquery');
 var Emitter = require('emitter');
 var events = require('events');
 var EmitterManager = require('emitter-manager');
@@ -15,7 +15,7 @@ module.exports = View;
 
 function View(el){
   if (!(this instanceof View)) return inherit(el, View);
-  this.el = dom(el);
+  this.el = $(el);
   this._bound = {};
   this.events = events(this.el.get(), this);
 }
@@ -51,4 +51,5 @@ View.prototype.bound = function(method){
   }
   return this._bound[method];
 };
+
 
