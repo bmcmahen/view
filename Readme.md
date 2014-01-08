@@ -20,7 +20,7 @@ function MyView(model){
   this.react(model);
   this.bind('click .bacon', 'eat');
   this.$bacon = this.$el.find('.bacon');
-  this.listenTo(model, 'change', this.onchange);
+  model.on('change', this.bound('onchange'));
 }
 
 View(MyView);

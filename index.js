@@ -1,15 +1,17 @@
 var dom = require('dom');
 var Emitter = require('emitter');
-var EmitterManager = require('emitter-manager');
 var inherit = require('inherit');
 var reactive = require('reactive');
-
-var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+var bind = require('bind');
 
 module.exports = View;
 
+var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+
+
 /**
  * View Constructor
+ * 
  * @param {Element} el 
  */
 
@@ -19,7 +21,6 @@ function View(el){
 }
 
 Emitter(View.prototype);
-EmitterManager(View.prototype);
 
 
 /**
@@ -30,7 +31,7 @@ EmitterManager(View.prototype);
 
 View.prototype.remove = function(){
   this.$el.remove();
-  this.stopListening();
+  this.emit('remove');
   return this;
 };
 
@@ -90,6 +91,20 @@ View.prototype.unbind = function(str, fnName){
   else this.$el.off(eventName, selector, fn);
   delete this._listeners[str + fnName];
   return this;
+};
+
+/**
+ * Create a bound function.
+ * 
+ * @param  {String} fnName 
+ * @return {Function}      
+ */
+
+View.prototype.bound = function(fnName){
+  if (!this._bound[fnName]) {
+    this._bound[fnName] = bind(this, this[fnName]);
+  }
+  return this._bound[fnName];
 };
 
 
