@@ -2,12 +2,11 @@
   "name": "view",
   "repo": "bmcmahen/view",
   "description": "a simple view for use with component/reactive",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "keywords": [],
   "dependencies": {
-    "component/jquery": "*",
+    "component/dom": "*",
     "component/emitter": "*",
-    "component/events": "*",
     "anthonyshort/emitter-manager": "*",
     "component/inherit": "*",
     "component/reactive": "*"

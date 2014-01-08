@@ -1,55 +1,95 @@
-var $ = require('jquery');
+var dom = require('dom');
 var Emitter = require('emitter');
-var events = require('events');
 var EmitterManager = require('emitter-manager');
 var inherit = require('inherit');
 var reactive = require('reactive');
 
+var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+
 module.exports = View;
 
 /**
- * Opinionated View. Somewhat like Backbone, but using reactive
- * templates instead.
+ * View Constructor
  * @param {Element} el 
  */
 
 function View(el){
   if (!(this instanceof View)) return inherit(el, View);
-  this.el = $(el);
-  this._bound = {};
-  this.events = events(this.el.get(0), this);
+  this.$el = dom(el);
 }
 
 Emitter(View.prototype);
 EmitterManager(View.prototype);
 
+
+/**
+ * Remove el from DOM and cleanup listeners
+ * 
+ * @return {View}
+ */
+
 View.prototype.remove = function(){
-  this.el.remove();
+  this.$el.remove();
+  this.stopListening();
+  return this;
 };
+
+
+/**
+ * Enable reactivity with a model or view.
+ * 
+ * @param  {Emitter} model 
+ * @return {View}      
+ */
 
 View.prototype.react = function(model){
-  this.reactive = reactive(this.el.get(0), model || this, this);
-};
-
-View.prototype.find = function(sel){
-  return this.el.find(sel);
-};
-
-View.prototype.bind = function(str, method){
-  this.events.bind(str, method);
+  this.reactive = reactive(this.el[0], model || this, this);
   return this;
 };
 
-View.prototype.unbind = function(str, method){
-  this.events.unbind(str, method);
+
+/**
+ * Delegate events to View Element. Note: This won't 
+ * work for focus, blur, change, submit, reset.
+ *  
+ * @param  {String} str    event & selector
+ * @param  {String} fnName 
+ * @return {View} 
+ */
+
+View.prototype.bind = function(str, fnName){
+  var self = this;
+  var match = str.match(delegateEventSplitter);
+  var eventName = match[1];
+  var selector = match[2];
+  var method = this[fnName].bind(this);
+
+  this._listeners[str + fnName] = method;
+
+  if (selector === '') this.$el.on(eventName, method);
+  else this.$el.on(eventName, selector, method);
+
   return this;
 };
 
-View.prototype.bound = function(method){
-  if (!this._bound[method]){
-    this._bound[method] = this[method].bind(this);
-  }
-  return this._bound[method];
+/**
+ * Unbind bound events
+ * 
+ * @param  {String} str    
+ * @param  {String} fnName 
+ * @return {View}        
+ */
+
+View.prototype.unbind = function(str, fnName){
+  var match = str.match(delegateEventSplitter);
+  var eventName = match[1];
+  var selector = match[2];
+  var fn = this._listeners[str + fnName];
+  // unbind
+  if (selector === '') this.$el.off(eventName, fn);
+  else this.$el.off(eventName, selector, fn);
+  delete this._listeners[str + fnName];
+  return this;
 };
 
 
