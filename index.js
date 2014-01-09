@@ -94,7 +94,7 @@ View.prototype.unbind = function(str, fnName){
 };
 
 /**
- * Create a bound function.
+ * Create/Retrieve a bound function.
  * 
  * @param  {String} fnName 
  * @return {Function}      
