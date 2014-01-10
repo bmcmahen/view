@@ -18,6 +18,8 @@ var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 function View(el){
   if (!(this instanceof View)) return inherit(el, View);
   this.$el = dom(el);
+  this._listeners = {};
+  this._bound = {};
 }
 
 Emitter(View.prototype);
