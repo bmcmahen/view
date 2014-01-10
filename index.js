@@ -65,7 +65,7 @@ View.prototype.bind = function(str, fnName){
   var match = str.match(delegateEventSplitter);
   var eventName = match[1];
   var selector = match[2];
-  var method = this[fnName].bind(this);
+  var method = bind(this, this[fnName]);
 
   this._listeners[str + fnName] = method;
 
