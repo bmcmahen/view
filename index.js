@@ -18,6 +18,7 @@ var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 function View(el){
   if (!(this instanceof View)) return inherit(el, View);
   this.$el = dom(el);
+  this.el = this.$el[0];
   this._listeners = {};
   this._bound = {};
 }
@@ -46,7 +47,7 @@ View.prototype.remove = function(){
  */
 
 View.prototype.react = function(model){
-  this.reactive = reactive(this.el[0], model || this, this);
+  this.reactive = reactive(this.el, model || this, this);
   return this;
 };
 
