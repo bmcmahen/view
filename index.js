@@ -17,7 +17,7 @@ function View(el){
   if (!(this instanceof View)) return inherit(el, View);
   this.$el = dom(el);
   this.el = this.$el[0];
-  this.events = this.events(el);
+  this.events = events(this.el, this);
   this._bound = {};
 }
 
