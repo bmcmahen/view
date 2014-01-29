@@ -2,7 +2,7 @@
   "name": "view",
   "repo": "bmcmahen/view",
   "description": "a simple view for use with component/reactive",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "keywords": [],
   "dependencies": {
     "component/dom": "*",
