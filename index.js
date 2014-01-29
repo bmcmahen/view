@@ -3,6 +3,7 @@ var Emitter = require('emitter');
 var inherit = require('inherit');
 var reactive = require('reactive');
 var events = require('events');
+var bind = require('bind');
 var EmitterManager = require('emitter-manager');
 
 module.exports = View;
