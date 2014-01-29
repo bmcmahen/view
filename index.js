@@ -2,12 +2,10 @@ var dom = require('dom');
 var Emitter = require('emitter');
 var inherit = require('inherit');
 var reactive = require('reactive');
-var bind = require('bind');
+var events = require('events');
+var EmitterManager = require('emitter-manager');
 
 module.exports = View;
-
-var delegateEventSplitter = /^(\S+)\s*(.*)$/;
-
 
 /**
  * View Constructor
@@ -19,11 +17,12 @@ function View(el){
   if (!(this instanceof View)) return inherit(el, View);
   this.$el = dom(el);
   this.el = this.$el[0];
-  this._listeners = {};
+  this.events = this.events(el);
   this._bound = {};
 }
 
 Emitter(View.prototype);
+EmitterManager(View.prototype);
 
 
 /**
@@ -34,6 +33,8 @@ Emitter(View.prototype);
 
 View.prototype.remove = function(){
   this.$el.remove();
+  this.events.unbind();
+  this.stopListening();
   this.emit('remove');
   return this;
 };
@@ -62,17 +63,7 @@ View.prototype.react = function(model){
  */
 
 View.prototype.bind = function(str, fnName){
-  var self = this;
-  var match = str.match(delegateEventSplitter);
-  var eventName = match[1];
-  var selector = match[2];
-  var method = bind(this, this[fnName]);
-
-  this._listeners[str + fnName] = method;
-
-  if (selector === '') this.$el.on(eventName, method);
-  else this.$el.on(eventName, selector, method);
-
+  this.events.bind(str, fnName);
   return this;
 };
 
@@ -85,14 +76,7 @@ View.prototype.bind = function(str, fnName){
  */
 
 View.prototype.unbind = function(str, fnName){
-  var match = str.match(delegateEventSplitter);
-  var eventName = match[1];
-  var selector = match[2];
-  var fn = this._listeners[str + fnName];
-  // unbind
-  if (selector === '') this.$el.off(eventName, fn);
-  else this.$el.off(eventName, selector, fn);
-  delete this._listeners[str + fnName];
+  this.events.unbind(str, fnName);
   return this;
 };
 

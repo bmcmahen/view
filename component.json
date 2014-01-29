@@ -7,9 +7,10 @@
   "dependencies": {
     "component/dom": "*",
     "component/emitter": "*",
-    "component/bind": "*",
     "component/inherit": "*",
-    "component/reactive": "*"
+    "component/reactive": "*",
+    "component/events": "*",
+    "anthonyshort/emitter-manager": "*"
   },
   "development": {
     "component/assert": "*"
